@@ -11,7 +11,6 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.1",
-    "nodemon": "^1.19.1",
     "websocket": "^1.0.34"
   }
 }
