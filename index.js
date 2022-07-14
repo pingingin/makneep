@@ -1,14 +1,19 @@
 const { response } = require("express");
 const http = require("http");
-const app = require("express")();
-app.get("/", (req, res) => res.sendFile(__dirname + "/index.html"))
-let PORT = process.env.PORT || 9090;
+let PORT = process.env.PORT || 3000;
+const INDEX = '/index.html';
+const app = express()
+  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
+  .listen(PORT, () => console.log(`Listening on ${PORT}`));
+// const app = require("express")();
+// app.get("/", (req, res) => res.sendFile(__dirname + "/index.html"))
+
 // app.get("/", (req, res) => res.sendFile("/index.html", { root: __dirname }))
 // app.listen(PORT, () => console.log("Listening on http port 9091"))
 const websocketServer = require("websocket").server
 const httpServer = http.createServer(app)
 
-httpServer.listen(PORT, () => console.log("listening... on 9090"))
+// httpServer.listen(PORT, () => console.log("listening... on 3000"))
 
 // hashmap clients
 const clients = {};
@@ -19,7 +24,7 @@ var player1 = null;
 var player2 = null;
 
 const wsServer = new websocketServer({
-       "httpServer": httpServer
+    "httpServer": httpServer
 })
 
 wsServer.on("request", request => {
