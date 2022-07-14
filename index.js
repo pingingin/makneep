@@ -1,19 +1,13 @@
 const { response } = require("express");
 const http = require("http");
-let PORT = process.env.PORT || 3000;
-const INDEX = '/index.html';
-const app = express()
-  .use((req, res) => res.sendFile(INDEX, { root: __dirname }))
-  .listen(PORT, () => console.log(`Listening on ${PORT}`));
-// const app = require("express")();
-// app.get("/", (req, res) => res.sendFile(__dirname + "/index.html"))
-
+const app = require("express")();
+app.get("/", (req, res) => res.sendFile(__dirname + "/index.html"))
 // app.get("/", (req, res) => res.sendFile("/index.html", { root: __dirname }))
-// app.listen(PORT, () => console.log("Listening on http port 9091"))
+// app.listen(9091, () => console.log("Listening on http port 9091"))
 const websocketServer = require("websocket").server
 const httpServer = http.createServer(app)
-
-// httpServer.listen(PORT, () => console.log("listening... on 3000"))
+let PORT = process.env.PORT || 9090;
+httpServer.listen(PORT, () => console.log("listening... on 9090"))
 
 // hashmap clients
 const clients = {};
