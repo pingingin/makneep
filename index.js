@@ -19,7 +19,8 @@ var player1 = null;
 var player2 = null;
 
 const wsServer = new websocketServer({
-    "httpServer": httpServer
+//     "httpServer": httpServer
+        "httpServer": https://makneep.herokuapp.com/
 })
 
 wsServer.on("request", request => {
