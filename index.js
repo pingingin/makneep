@@ -4,9 +4,9 @@ const app = require("express")();
 app.get("/", (req, res) => res.sendFile(__dirname + "/index.html"))
 let PORT = process.env.PORT || 9090;
 // app.get("/", (req, res) => res.sendFile("/index.html", { root: __dirname }))
-app.listen(PORT, () => console.log("Listening on http port 9091"))
+// app.listen(PORT, () => console.log("Listening on http port 9091"))
 const websocketServer = require("websocket").server
-const httpServer = http.createServer()
+const httpServer = http.createServer(app)
 
 httpServer.listen(PORT, () => console.log("listening... on 9090"))
 
