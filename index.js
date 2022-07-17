@@ -12,6 +12,7 @@ httpServer.listen(PORT, () => console.log("listening... on 9090"))
 // hashmap clients
 const clients = {};
 const games = {};
+const gamesArr = [];
 var board1 = null;
 var board2 = null;
 var player1 = null;
@@ -25,7 +26,12 @@ wsServer.on("request", request => {
     // connect 
     const connection = request.accept(null, request.origin);
     connection.on("open", () => console.log("opened!!"));
-    connection.on("close", () => console.log("closed!!"));
+    connection.on("close", () => {
+        console.log(clients);
+        clearRooms();
+
+        console.log("closed!!");
+    });
     connection.on("message", message => {
         const result = JSON.parse(message.utf8Data)
         // I have received a message from the client
@@ -33,10 +39,12 @@ wsServer.on("request", request => {
 
         if(result.method === "create") {
             const clientId = result.clientId;
+            deleteBlankRooms(clientId);
             player1 = clientId;
             const board = result.board;
             const gameId = guid();
             board1 = board;
+            gamesArr.push(gameId);
             games[gameId] = {
                 "id": gameId,
                 "clients": []
@@ -62,12 +70,25 @@ wsServer.on("request", request => {
         if(result.method === "join") {
             const clientId = result.clientId;
             player2 = clientId;
-            const gameId = result.gameId;
+            let gameId = result.gameId;
+            if(!checkRooms(gameId)) {
+                console.log("eieiei");
+                gameId = '';
+            }
+            
+            
             const game = games[gameId];
+            console.log(game);
+            console.log(games);
+            
             const board = result.board;
             board2 = board;
 
             if(gameId === '' || game.clients.length >= 2) {
+                const payLoad = {
+                    "method": "refresh",
+                }
+                clients[clientId].connection.send(JSON.stringify(payLoad));
                 // Mac player reach
                 return;
             }
@@ -108,6 +129,9 @@ wsServer.on("request", request => {
         if(result.method === "play") {
             const clientId = result.clientId;
             const gameId = result.gameId;
+            if(games[gameId] === null) {
+                return;
+            }
             const game = games[gameId];
             const turn = result.turn;
             const currPiece = result.currPiece;
@@ -204,6 +228,95 @@ wsServer.on("request", request => {
             })
         }
     })
+    function checkDisRoom(clientId, gameId) {
+        for(const [key, value] of Object.entries(games)) {
+            let recon;
+            games[key].clients.forEach(c => {
+                if(c.clientId === clientId && games[key].clients.length === 2 && key !== gameId){
+                    games[key].clients.forEach(c1 => {
+                        if(c1.clientId !== clientId) {
+                            recon = c1.clientId;
+                        }
+                        else {
+                            delete c1.clientId;
+                        }
+                    });
+
+                    const payLoad = {
+                        "method": "create",
+                        "game": games[key],
+                        "player": "1",
+                        "board" : null
+                    }
+        
+                    const con = clients[recon].connection;
+                    con.send(JSON.stringify(payLoad));
+
+                }
+            });
+        }
+    }
+
+    // function deleteBlankRooms(clientId) {
+    //     if(games.length !== 0) {
+    //         for (const [key, value] of Object.entries(games)) {
+    //             games[key].clients.forEach(c => {
+    //                 if(c.clientId === clientId && c.player === "1"){
+    //                     delete games[key];
+    //                 }
+    //             });
+    //         }
+    //     }
+    // }
+
+    function deleteBlankRooms(clientId) {
+        let tmpIndexGames = [];
+        if(gamesArr.length !== 0) {
+            for(let i = 0; i < gamesArr.length; i++) {
+                for (const [key, value] of Object.entries(games)) {
+                    if(gamesArr[i] === key) {
+                        games[key].clients.forEach(c => {
+                           if(c.clientId === clientId && c.player === "1"){
+                                delete games[key];
+                                tmpIndexGames.push(gamesArr[i]);
+                           }
+                        });
+                    }
+                }
+            }
+            for(let i = 0; i < tmpIndexGames.length; i++) {
+                for(let j = 0; j < gamesArr.length; j++) {
+                    if(gamesArr[j] == tmpIndexGames[i]) {
+                        gamesArr.splice(j, 1);
+                        break;
+                    }
+                }    
+            }
+        }
+    }
+    function clearRooms() {
+        console.log("clearrrr!!")
+        for (const [key, value] of Object.entries(clients)) {
+            if(value.connection.state === 'closed') {
+                for (const [keyG, valueG] of Object.entries(games)) {
+                    games[keyG].clients.forEach(c => {
+                        if(c.clientId === key){
+                            delete games[keyG];
+                        }
+                    });
+                }
+            }
+        }
+    }
+
+    function checkRooms(gameId) {
+        for (const [key, value] of Object.entries(games)) {
+            if(gameId === key){
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     // generate a new clientId
@@ -214,17 +327,20 @@ wsServer.on("request", request => {
 
     const payLoad = {
         "method": "connect",
-        "clientId": clientId
+        "clientId": clientId,
+        "games": games
     }
 
 
     // send back the client connect
-    connection.send(JSON.stringify(payLoad))
+    connection.send(JSON.stringify(payLoad));
+
+
 
 })
 
 function S4() {
-    return (((1+Math.random())*0x10000)|0).toString(4).substring(1); 
+    return (((1+Math.random())*0x10000)|0).toString(8).substring(1); 
 }
  
 // then to call it, plus stitch in '4' in the third group
