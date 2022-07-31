@@ -28,11 +28,12 @@ wsServer.on("request", request => {
     connection.on("open", () => console.log("opened!!"));
     connection.on("close", () => {
         console.log(clients);
-        clearRooms();
-
+        // clearRooms();
+        // clearIdDestroy();
         console.log("closed!!");
     });
     connection.on("message", message => {
+        
         const result = JSON.parse(message.utf8Data)
         // I have received a message from the client
         console.log(result)
@@ -40,6 +41,7 @@ wsServer.on("request", request => {
         if(result.method === "create") {
             const clientId = result.clientId;
             deleteBlankRooms(clientId);
+            clearRooms();
             player1 = clientId;
             const board = result.board;
             const gameId = guid();
@@ -136,6 +138,9 @@ wsServer.on("request", request => {
             const turn = result.turn;
             const currPiece = result.currPiece;
             const myPieces = result.myPieces;
+
+            let winner = resWin(myPieces);
+
             board1 = result.board1;
             board2 = result.board2;
 
@@ -147,7 +152,8 @@ wsServer.on("request", request => {
                 "board" : board1,
                 "turn": turn,
                 "currPiece": currPiece,
-                "myPieces": myPieces
+                "myPieces": myPieces,
+                "winner": winner
             }
 
             const payLoad2 = {
@@ -158,7 +164,8 @@ wsServer.on("request", request => {
                 "board" : board2,
                 "turn": turn,
                 "currPiece": currPiece,
-                "myPieces": myPieces
+                "myPieces": myPieces,
+                "winner": winner
             }
 
             const payLoad3 = {
@@ -169,7 +176,8 @@ wsServer.on("request", request => {
                 "board" : board1,
                 "turn": turn,
                 "currPiece": currPiece,
-                "myPieces": myPieces
+                "myPieces": myPieces,
+                "winner": winner
             }
 
             const payLoad4 = {
@@ -180,8 +188,10 @@ wsServer.on("request", request => {
                 "board" : board2,
                 "turn": turn,
                 "currPiece": currPiece,
-                "myPieces": myPieces
+                "myPieces": myPieces,
+                "winner": winner
             }
+            
 
             game.clients.forEach(c => {
                 if(turn === '1' && currPiece !== null) {
@@ -228,6 +238,24 @@ wsServer.on("request", request => {
             })
         }
     })
+    function clearIdDestroy() {
+        for (const [key, value] of Object.entries(clients)) {
+            if(value.connection._keepaliveTimeoutID._destroyed) {
+                delete clients[key];
+            }
+        }
+    }
+    
+
+    function resWin(myPieces) {
+        if(myPieces[0].length <= 1) {
+            return 2;
+        }
+        if(myPieces[1].length <= 1) {
+            return 1;
+        }
+        return 0;
+    }
     function checkDisRoom(clientId, gameId) {
         for(const [key, value] of Object.entries(games)) {
             let recon;
@@ -257,54 +285,66 @@ wsServer.on("request", request => {
         }
     }
 
-    // function deleteBlankRooms(clientId) {
-    //     if(games.length !== 0) {
-    //         for (const [key, value] of Object.entries(games)) {
-    //             games[key].clients.forEach(c => {
-    //                 if(c.clientId === clientId && c.player === "1"){
-    //                     delete games[key];
-    //                 }
-    //             });
-    //         }
-    //     }
-    // }
-
     function deleteBlankRooms(clientId) {
-        let tmpIndexGames = [];
-        if(gamesArr.length !== 0) {
-            for(let i = 0; i < gamesArr.length; i++) {
-                for (const [key, value] of Object.entries(games)) {
-                    if(gamesArr[i] === key) {
-                        games[key].clients.forEach(c => {
-                           if(c.clientId === clientId && c.player === "1"){
-                                delete games[key];
-                                tmpIndexGames.push(gamesArr[i]);
-                           }
-                        });
+        if(games.length !== 0) {
+            for (const [key, value] of Object.entries(games)) {
+                games[key].clients.forEach(c => {
+                    if(c.clientId === clientId && c.player === "1"){
+                        delete games[key];
                     }
-                }
-            }
-            for(let i = 0; i < tmpIndexGames.length; i++) {
-                for(let j = 0; j < gamesArr.length; j++) {
-                    if(gamesArr[j] == tmpIndexGames[i]) {
-                        gamesArr.splice(j, 1);
-                        break;
-                    }
-                }    
+                });
             }
         }
     }
+
+    // function deleteBlankRooms(clientId) {
+    //     let tmpIndexGames = [];
+    //     if(gamesArr.length !== 0) {
+    //         for(let i = 0; i < gamesArr.length; i++) {
+    //             for (const [key, value] of Object.entries(games)) {
+    //                 if(gamesArr[i] === key) {
+    //                     games[key].clients.forEach(c => {
+    //                        if(c.clientId === clientId && c.player === "1"){
+    //                             delete games[key];
+    //                             tmpIndexGames.push(gamesArr[i]);
+    //                        }
+    //                     });
+    //                 }
+    //             }
+    //         }
+    //         for(let i = 0; i < tmpIndexGames.length; i++) {
+    //             for(let j = 0; j < gamesArr.length; j++) {
+    //                 if(gamesArr[j] == tmpIndexGames[i]) {
+    //                     gamesArr.splice(j, 1);
+    //                     break;
+    //                 }
+    //             }    
+    //         }
+    //     }
+    // }
     function clearRooms() {
         console.log("clearrrr!!")
         for (const [key, value] of Object.entries(clients)) {
-            if(value.connection.state === 'closed') {
+            if(value.connection.state === "closed") {
                 for (const [keyG, valueG] of Object.entries(games)) {
                     games[keyG].clients.forEach(c => {
                         if(c.clientId === key){
                             delete games[keyG];
+                            
+                            return true;
                         }
                     });
                 }
+                delete clients[key];
+            }
+        }
+        return false;
+    }
+    function clearRoomsBlank() {
+        console.log("clearrrr!!")
+        for (const [key, value] of Object.entries(clients)) {
+            if(value.connection.state === "closed") {
+                delete clients[key];
             }
         }
     }

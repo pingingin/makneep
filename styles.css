@@ -1,0 +1,235 @@
+
+
+
+
+/* CSS */
+.button-24 {
+  background: #F6D86D;
+  border: 1px solid #F6D86D;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 16px;
+  min-height: 40px;
+  outline: 0;
+  padding: 12px 14px;
+  text-align: center;
+  text-rendering: geometricprecision;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+}
+
+.button-24:hover,
+.button-24:active {
+  background-color: #FFFFFF;
+  background-position: 0 0;
+  color: #F6D86D;
+}
+
+.button-24:active {
+  opacity: .5;
+}
+
+.button-25 {
+  background: #51BCAD;
+  border: 1px solid #51BCAD;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 16px;
+  min-height: 40px;
+  outline: 0;
+  padding: 12px 14px;
+  text-align: center;
+  text-rendering: geometricprecision;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+}
+
+.button-25:hover,
+.button-25:active {
+  background-color: #FFFFFF;
+  background-position: 0 0;
+  color: #51BCAD;
+}
+
+.button-25:active {
+  opacity: .5;
+}
+
+.button-26 {
+  background: #F2BA65;
+  border: 1px solid #F2BA65;
+  border-radius: 6px;
+  box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+  box-sizing: border-box;
+  color: #FFFFFF;
+  cursor: pointer;
+  display: inline-block;
+  font-family: nunito,roboto,proxima-nova,"proxima nova",sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 16px;
+  min-height: 40px;
+  outline: 0;
+  padding: 12px 14px;
+  text-align: center;
+  text-rendering: geometricprecision;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+}
+
+.button-26:hover,
+.button-26:active {
+  background-color: #FFFFFF;
+  background-position: 0 0;
+  color: #F2BA65;
+}
+
+.button-26:active {
+  opacity: .5;
+}
+
+body {
+  background-color: #d7adff;
+
+}
+table {
+  background-color: #f0ebda;
+  
+}
+
+center {
+
+  text-align: center;
+}
+
+input {
+  background: #ffffff;
+  border: 1px solid #F2BA65;
+  border-radius: 6px;
+
+  box-sizing: border-box;
+  color: #000000;
+
+  display: inline-block;
+
+
+  padding: 12px 14px;
+
+
+}
+.inline {
+  /* display: inline-block; */
+  /* margin: 10px; */
+  margin: auto;
+  width: 1000%;
+  display: table-row;
+  justify-content: space-between;
+  text-align: center;
+}
+
+td {
+  height: 100px;
+  width: 100px;
+}
+table {
+  border-collapse: collapse;
+  overflow-x: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* .black-piece {
+  width: 60px;
+  height: 60px;
+  padding: 40%;
+  background-color: rgb(255, 96, 68);
+  border: 1px solid white;
+  border-radius: 50%;
+} */
+
+.black-piece {
+  background: #4faaff;
+  border: 0.18em solid #b9bcc5;
+  border-radius: 50%;
+  /* box-shadow: 0.3em 0.3em 0 0 rgba(15, 28, 63, 0.125); */
+  height: 80px;
+  width: 80px;
+}
+
+.red-piece {
+  background: #FD948E;
+  border: 0.18em solid #b9bcc5;
+  border-radius: 50%;
+  /* box-shadow: 0.3em 0.3em 0 0 rgba(15, 28, 63, 0.125); */
+  height: 80px;
+  width: 80px;
+}
+
+.black-piece-click {
+  background: #4faaff;
+  border: 0.18em solid #0F1C3F;
+  border-radius: 50%;
+  /* box-shadow: 0.3em 0.3em 0 0 rgba(15, 28, 63, 0.125); */
+  height: 80px;
+  width: 80px;
+}
+
+.red-piece-click {
+  background: #FD948E;
+  border: 0.18em solid #0F1C3F;
+  border-radius: 50%;
+  /* box-shadow: 0.3em 0.3em 0 0 rgba(15, 28, 63, 0.125); */
+  height: 80px;
+  width: 80px;
+}
+p {
+  text-align: center;
+  margin-left: 5%;
+}
+
+/* .red-piece {
+  width: 60px;
+  height: 60px;
+  padding: 40%;
+  background-color: rgb(0, 191, 255);
+  border: 1px solid white;
+  border-radius: 50%;
+} */
+
+/* .black-piece-click {
+  padding: 40%;
+  background-color: rgb(255, 96, 68);
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 50%;
+}
+
+.red-piece-click {
+  width: 60px;
+  height: 60px;
+  padding: 40%;
+  background-color: rgb(0, 191, 255);
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 50%;
+} */
